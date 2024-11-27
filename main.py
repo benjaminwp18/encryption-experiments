@@ -10,6 +10,28 @@ from key_store import BytesKeyStore
 KEY_PATH = Path('data') / 'keys' / 'key'
 FILES_PATH = Path('data') / 'files'
 
+def get_bytes_key(encrypt: bool):
+    key_store = BytesKeyStore()
+
+    if encrypt:
+        print('Generating key')
+        key = FernetKeyGenerator.generate()
+        key_store.save_key(key, KEY_PATH)
+    else:
+        print('Loading key')
+        key = key_store.load_key(KEY_PATH)
+
+    return key
+
+def basic_crypter(encrypt: bool):
+    key = get_bytes_key(encrypt)
+
+    files_crypter = FilesCrypter([
+        InPlaceFileCrypter(key, FileSize.from_mb(10))
+    ])
+
+    files_crypter.crypt([FILES_PATH], encrypt=encrypt)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Simple File Encryptor Script')
     parser.add_argument('-e', '--encrypt', action='store_true',
@@ -26,18 +48,4 @@ if __name__ == '__main__':
         # !args.decrypt instead of args.encrypt here for default of encrypt=True when nothing's specified
         encrypt = not args.decrypt
 
-    key_store = BytesKeyStore()
-
-    if encrypt:
-        print('Generating key')
-        key = FernetKeyGenerator.generate()
-        key_store.save_key(key, KEY_PATH)
-    else:
-        print('Loading key')
-        key = key_store.load_key(KEY_PATH)
-
-    files_crypter = FilesCrypter([
-        InPlaceFileCrypter(key, FileSize.from_mb(10))
-    ])
-
-    files_crypter.crypt([FILES_PATH], encrypt=encrypt)
+    basic_crypter(encrypt)
