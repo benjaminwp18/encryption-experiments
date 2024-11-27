@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 
 from file_crypters.basic_crypters import BytewiseFileCrypter
+from file_crypters.pixel_shuffle import PixelShuffleFileCrypter
 from file_crypters.visual_aes import VisualAESFileCrypter
 from file_io import FileSize
 from files_crypter import FilesCrypter
@@ -42,6 +43,15 @@ def visual_aes_crypter(encrypt: bool):
 
     files_crypter.crypt([FILES_PATH], encrypt=encrypt)
 
+def pixel_shuffle_crypter(encrypt: bool):
+    key = get_bytes_key(encrypt)
+
+    files_crypter = FilesCrypter([
+        PixelShuffleFileCrypter(key, FileSize.from_mb(10), 0.4)
+    ])
+
+    files_crypter.crypt([FILES_PATH], encrypt=encrypt)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Simple File Encryptor Script')
     parser.add_argument('-e', '--encrypt', action='store_true',
@@ -58,4 +68,4 @@ if __name__ == '__main__':
         # !args.decrypt instead of args.encrypt here for default of encrypt=True when nothing's specified
         encrypt = not args.decrypt
 
-    visual_aes_crypter(encrypt)
+    pixel_shuffle_crypter(encrypt)
