@@ -1,8 +1,9 @@
 import argparse
 from pathlib import Path
 
-from file_crypter import InPlaceFileCrypter
-from file_size import FileSize
+from file_crypters.basic_crypters import BytewiseFileCrypter
+from file_crypters.visual_aes import VisualAESFileCrypter
+from file_io import FileSize
 from files_crypter import FilesCrypter
 from key_generator import FernetKeyGenerator
 from key_store import BytesKeyStore
@@ -27,7 +28,16 @@ def basic_crypter(encrypt: bool):
     key = get_bytes_key(encrypt)
 
     files_crypter = FilesCrypter([
-        InPlaceFileCrypter(key, FileSize.from_mb(10))
+        BytewiseFileCrypter(key, FileSize.from_mb(10))
+    ])
+
+    files_crypter.crypt([FILES_PATH], encrypt=encrypt)
+
+def visual_aes_crypter(encrypt: bool):
+    key = get_bytes_key(encrypt)
+
+    files_crypter = FilesCrypter([
+        VisualAESFileCrypter(key, FileSize.from_mb(10))
     ])
 
     files_crypter.crypt([FILES_PATH], encrypt=encrypt)
@@ -48,4 +58,4 @@ if __name__ == '__main__':
         # !args.decrypt instead of args.encrypt here for default of encrypt=True when nothing's specified
         encrypt = not args.decrypt
 
-    basic_crypter(encrypt)
+    visual_aes_crypter(encrypt)

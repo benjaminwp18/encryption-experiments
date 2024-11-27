@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-from bytes_crypter import BytesCrypter
-from file_handler import FileHandler
-from file_size import FileSize
+from file_io import FileHandler, FileSize
+from cryptography.fernet import Fernet
 
 class CannotCrypt(Exception):
     pass
@@ -19,15 +18,15 @@ class FileCrypter(ABC):
     def crypt(self, file_path: Path, encrypt: bool) -> None:
         pass
 
-class InPlaceFileCrypter(FileCrypter):
+class BytewiseFileCrypter(FileCrypter):
     def __init__(self, key: bytes, max_file_size: FileSize) -> None:
-        self.bytes_crypter = BytesCrypter(key)
+        self.fernet = Fernet(key)
         self.max_file_size = max_file_size
 
     def crypt(self, file_path: Path, encrypt: bool) -> None:
-        if FileHandler.is_legal_file(file_path, self.max_file_size):
-            file_bytes = FileHandler.load_file(file_path)
-            converted_bytes = self.bytes_crypter.crypt(file_bytes, encrypt)
-            FileHandler.save_file(file_path, converted_bytes)
-        else:
+        if not FileHandler.is_legal_file(file_path, self.max_file_size):
             raise CannotCrypt()
+
+        file_bytes = FileHandler.load_file(file_path)
+        converted_bytes = self.fernet.encrypt(file_bytes) if encrypt else self.fernet.decrypt(file_bytes)
+        FileHandler.save_file(file_path, converted_bytes)

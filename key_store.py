@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-from file_handler import FileHandler
+from file_io import FileHandler
 
 
 class KeyStore(ABC):

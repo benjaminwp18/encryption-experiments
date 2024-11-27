@@ -1,8 +1,7 @@
 from pathlib import Path
 import os
-import warnings
 
-from file_crypter import FileCrypter, CannotCrypt
+from file_crypters.basic_crypters import FileCrypter, CannotCrypt
 
 class FilesCrypter():
     def __init__(self, file_crypters: list[FileCrypter]):
@@ -41,4 +40,4 @@ class FilesCrypter():
                     print(f'{str(file_path)} falls through crypter {i}')
 
                     if i == len(self.file_crypters) - 1:
-                        warnings.warn(f'{str(file_path)} not processed by any crypters, skipping')
+                        print(f'{str(file_path)} not processed by any crypters, skipping')
