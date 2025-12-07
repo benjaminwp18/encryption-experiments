@@ -47,7 +47,7 @@ def pixel_shuffle_crypter(encrypt: bool):
     key = get_bytes_key(encrypt)
 
     files_crypter = FilesCrypter([
-        PixelShuffleFileCrypter(key, FileSize.from_mb(10), 0.4)
+        PixelShuffleFileCrypter(key, FileSize.from_mb(10))
     ])
 
     files_crypter.crypt([FILES_PATH], encrypt=encrypt)

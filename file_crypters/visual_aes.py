@@ -28,8 +28,8 @@ class VisualAESFileCrypter(FileCrypter):
             raise CannotCrypt()
 
     def _encrypt_visual_aes(self, file_path: Path):
-        img = Image.open(file_path)
-        img = img.convert("RGB")
+        img_file = Image.open(file_path)
+        img = img_file.convert("RGB")
         img_array = np.array(img)
 
         print(len(self.key))

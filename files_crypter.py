@@ -32,6 +32,9 @@ class FilesCrypter():
 
         file_paths = FilesCrypter.load_files(paths)
         for file_path in file_paths:
+            if file_path.name[0] == '.':
+                # Ignore dotfiles
+                continue
             for i, crypter in enumerate(self.file_crypters):
                 try:
                     crypter.crypt(file_path, encrypt=encrypt)

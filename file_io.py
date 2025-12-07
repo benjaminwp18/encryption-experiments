@@ -40,7 +40,7 @@ class FileHandler():
             file.write(file_bytes)
 
     @staticmethod
-    def is_legal_file(file_path: Path, max_file_size: FileSize = None):
+    def is_legal_file(file_path: Path, max_file_size: FileSize | None = None):
         return (
             file_path.is_file() and not file_path.is_symlink()
             and (

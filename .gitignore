@@ -1,4 +1,8 @@
 venv
-data
+data/files/*
+!data/files/.gitkeep
+data/keys/*
+!data/keys/.gitkeep
 backup
 __pycache__
+.mypy_cache
